@@ -10,6 +10,28 @@ DEBUG = False
 
 import dj_database_url
 
+# Allowed hosts for Railway
+# Get from environment or use Railway's auto-generated domain
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = [h.strip() for h in ALLOWED_HOSTS if h.strip()]
+
+# Add Railway domain automatically
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
+if RAILWAY_PUBLIC_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+
+# Always allow .railway.app domains
+ALLOWED_HOSTS.append('.railway.app')
+ALLOWED_HOSTS.append('.up.railway.app')
+
+# CSRF trusted origins for Railway
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'https://*.up.railway.app',
+]
+if RAILWAY_PUBLIC_DOMAIN:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RAILWAY_PUBLIC_DOMAIN}')
+
 # PostgreSQL for production (Railway)
 # DATABASE_URL is required at runtime, but may be missing during build (collectstatic)
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -39,11 +61,8 @@ X_FRAME_OPTIONS = 'DENY'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# HTTPS settings (enable when SSL is configured)
-# SECURE_SSL_REDIRECT = True
-# SECURE_HSTS_SECONDS = 31536000
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+# HTTPS settings (Railway uses HTTPS by default)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
