@@ -6,7 +6,14 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'oze_website.settings.dev')
+    # Auto-detect production environment (Railway, Heroku, etc.)
+    # Use prod settings if DATABASE_URL or RAILWAY_ENVIRONMENT is set
+    if os.environ.get('DATABASE_URL') or os.environ.get('RAILWAY_ENVIRONMENT'):
+        default_settings = 'oze_website.settings.prod'
+    else:
+        default_settings = 'oze_website.settings.dev'
+    
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', default_settings)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
