@@ -11,21 +11,26 @@ DEBUG = False
 import dj_database_url
 
 # PostgreSQL for production (Railway)
-# DATABASE_URL must be set in production
+# DATABASE_URL is required at runtime, but may be missing during build (collectstatic)
 DATABASE_URL = os.environ.get('DATABASE_URL')
-if not DATABASE_URL:
-    raise ValueError(
-        "DATABASE_URL environment variable is not set. "
-        "Please configure your database in Railway or your hosting provider."
-    )
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # Dummy database for build time (collectstatic doesn't need real DB)
+    # At runtime, DATABASE_URL must be set
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True
