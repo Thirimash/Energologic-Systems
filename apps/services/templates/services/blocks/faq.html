@@ -1,0 +1,20 @@
+<div class="mb-12">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ self.title }}</h3>
+    <div class="space-y-4">
+        {% for item in self.items %}
+        <details class="group bg-gray-50 rounded-xl overflow-hidden">
+            <summary
+                class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-100 transition-colors">
+                <span class="font-medium text-gray-900">{{ item.question }}</span>
+                <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </summary>
+            <div class="px-6 pb-4 prose prose-sm max-w-none">
+                {{ item.answer|safe }}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+</div>

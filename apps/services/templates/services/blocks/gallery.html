@@ -1,0 +1,9 @@
+{% load wagtailimages_tags %}
+<div class="mb-12">
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ self.title }}</h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {% for image in self.images %}
+        {% image image fill-400x300 class="rounded-xl shadow-md hover:shadow-xl transition-shadow cursor-pointer" %}
+        {% endfor %}
+    </div>
+</div>
