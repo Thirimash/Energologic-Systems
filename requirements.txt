@@ -4,6 +4,7 @@ wagtail>=5.2,<6.0
 
 # Database
 psycopg2-binary>=2.9
+dj-database-url>=2.1.0
 
 # Static files
 whitenoise>=6.6
